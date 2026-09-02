@@ -94,3 +94,26 @@ def decrypt_file(shift1: int, shift2: int, input_path: str = "encrypted_text.txt
 
     with open(output_path, 'w', encoding='utf-8') as outfile:
         outfile.write(decrypted_text)
+
+
+def verify_files(original_path: str = "raw_text.txt", decrypted_path: str = "decrypted_text.txt") -> bool:
+    """
+    Compares original_path and decrypted_path files.
+    Prints whether decryption was successful and returns boolean status.
+    """
+    try:
+        with open(original_path, 'r', encoding='utf-8') as f_orig:
+            orig_text = f_orig.read()
+        with open(decrypted_path, 'r', encoding='utf-8') as f_dec:
+            dec_text = f_dec.read()
+
+        is_success = orig_text == dec_text
+        if is_success:
+            print("Decryption Successful: The decrypted file matches the original raw text exactly.")
+        else:
+            print("Decryption Failed: The decrypted file content does NOT match the original text.")
+        return is_success
+
+    except FileNotFoundError as error:
+        print(f"Error reading files for verification: {error}")
+        return False
