@@ -1,7 +1,9 @@
 """
 Cipher module for HIT137 Assignment 2 - Question 1.
-Provides encryption and decryption functions based on character position rules.
+Provides encryption, decryption, and verification functions based on character position rules.
 """
+
+import os
 
 
 def encrypt_char(char: str, shift1: int, shift2: int) -> str:
@@ -117,3 +119,57 @@ def verify_files(original_path: str = "raw_text.txt", decrypted_path: str = "dec
     except FileNotFoundError as error:
         print(f"Error reading files for verification: {error}")
         return False
+
+
+def get_shift_input(prompt_text: str) -> int:
+    """
+    Prompts the user for a non-negative integer input.
+    Repeats until a valid non-negative integer is entered.
+    """
+    while True:
+        try:
+            value = int(input(prompt_text))
+            if value < 0:
+                print("Invalid input: shift values must be non-negative integers (0 or greater).")
+                continue
+            return value
+        except ValueError:
+            print("Invalid input: please enter a valid integer.")
+
+
+def main() -> None:
+    """
+    Main program workflow:
+    1. Prompt user for shift1 and shift2
+    2. Encrypt raw_text.txt -> encrypted_text.txt
+    3. Decrypt encrypted_text.txt -> decrypted_text.txt
+    4. Verify decryption matches raw_text.txt
+    """
+    print("=== HIT137 Assignment 2: Question 1 Cipher Program ===")
+    shift1 = get_shift_input("Enter shift1 (non-negative integer): ")
+    shift2 = get_shift_input("Enter shift2 (non-negative integer): ")
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    raw_path = os.path.join(base_dir, "raw_text.txt")
+    enc_path = os.path.join(base_dir, "encrypted_text.txt")
+    dec_path = os.path.join(base_dir, "decrypted_text.txt")
+
+    print("\n[Step 1] Encrypting 'raw_text.txt'...")
+    encrypt_file(shift1, shift2, input_path=raw_path, output_path=enc_path)
+    print(f"Content encrypted and written to '{enc_path}'.")
+
+    print("\n[Step 2] Decrypting 'encrypted_text.txt'...")
+    decrypt_file(shift1, shift2, input_path=enc_path, output_path=dec_path)
+    print(f"Content decrypted and written to '{dec_path}'.")
+
+    print("\n[Step 3] Verifying decryption matches original...")
+    success = verify_files(original_path=raw_path, decrypted_path=dec_path)
+
+    if success:
+        print("\nProcess completed successfully!")
+    else:
+        print("\nProcess completed with verification warnings.")
+
+
+if __name__ == "__main__":
+    main()
