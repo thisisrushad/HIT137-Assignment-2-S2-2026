@@ -68,3 +68,29 @@ def decrypt_char(char: str, shift1: int, shift2: int) -> str:
 
     else:
         return char
+
+
+def encrypt_file(shift1: int, shift2: int, input_path: str = "raw_text.txt", output_path: str = "encrypted_text.txt") -> None:
+    """
+    Reads from input_path and writes encrypted content to output_path.
+    """
+    with open(input_path, 'r', encoding='utf-8') as infile:
+        text = infile.read()
+
+    encrypted_text = "".join(encrypt_char(c, shift1, shift2) for c in text)
+
+    with open(output_path, 'w', encoding='utf-8') as outfile:
+        outfile.write(encrypted_text)
+
+
+def decrypt_file(shift1: int, shift2: int, input_path: str = "encrypted_text.txt", output_path: str = "decrypted_text.txt") -> None:
+    """
+    Reads from input_path and writes decrypted content to output_path.
+    """
+    with open(input_path, 'r', encoding='utf-8') as infile:
+        text = infile.read()
+
+    decrypted_text = "".join(decrypt_char(c, shift1, shift2) for c in text)
+
+    with open(output_path, 'w', encoding='utf-8') as outfile:
+        outfile.write(decrypted_text)
